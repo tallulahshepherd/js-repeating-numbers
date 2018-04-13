@@ -1,72 +1,62 @@
-//A4
-// Declaring variables
 
-var userChoice; // whether the user wants to continue playing
-var numAmt; // the amount of numbers the user wants to input
-var array = []; // the array we'll use to store the numbers
-var smallest; // holds the smallest number in the array
-var counter =0; // keeps count
-var number; // used to test against the smallest value
-var smallestCount; // repitition count of the smallest number
+//b4
+// function to get the number of digits in the given number
+function numberOfDigits(number){
+	return number.toString().length;
+}
 
-// program runs while the user not type 'no' to the final question.
-
+// loop continues as long as user does not enter 'no' to the final question
 do {
-	// asks how many numbers the user will input, and checks whether answers are valid.
-	numAmt = prompt("How many numbers would you like to input?");
-	if (numAmt == 0){
-		alert("You cannot enter zero numbers: please try again.")
-	}
-	else if (numAmt <0){
-		alert("You cannot enter a negative amount of numbers: please try again.")
-	}
-	else {
-		// if valid, each value is pushed into the array. If the user just presses return, that input is
-		// read as zero.
-		do {
-		userInput = prompt("Please enter a number:");
+	// variables declared here, so they refresh in each loop
+	var userInput; 
+	var array = []; // empty array for storing each digit of the number
+	var counterArray = [0,0,0,0,0,0,0,0,0,0]; // array filled with zeroes to find the repitition count
+	var hasDuplicate=0; // changes to one if the given number has a duplicate
+	
+	
+	// asks the user for the number, and gives an error message if the input is not valid
+	// it will keep asking if the user input is not valid.
+	do {
+		userInput = prompt("Enter a number:");
 
-		if (userInput.length == 0){
-			userInput=0;
+		if (userInput<10 && userInput>0){
+			alert("A single digit number cannot have repitition. Please try again:");
 		}
-	
-		array.push(userInput);
-		numAmt--;
-	} while(numAmt >0);
+		else if (userInput <= 0) {
+			alert("Only natural number allowed. Please try again.");
+		}
+	}while(userInput<10);
 
-	// sorts the array, in order to find the smallest value.
-	var sorted = array.slice().sort(function(a,b){
-		return a - b;
-	});
-	
-	// the smallest value will now be at the first point in the array, and this is printed. then the
-	// counter function is called.
-	smallest = sorted[0];
-	//alert("The smallest number is: " + smallest);
-	smallestCount = repititionCount(array,smallest);
+	// function call to get the number of digits
+	var digitCounter = numberOfDigits(userInput);
 
-	// has a printing option for multiple times and just one time, for gramatical correctness.
-	if (smallestCount == 1){
-		alert("The smallest number is: " +smallest +". It is repeated " + smallestCount + " time.")
+	// uses modulo to get each number, and then puts them into the empty array.
+	// the corresponding index in the counter array is increased by one. If any
+	// index in the counter array has a value more than one, then there is a 
+	// duplicate, and hasDuplicate increases. the modulo is subtracted from 
+	// userInput, and then userInput is divided by 10.
+	for (var i = 0; i < digitCounter;i++){
+		array[i] = userInput%10;
+		counterArray[array[i]] +=1;
+		if(counterArray[array[i]] > 1){
+			hasDuplicate = 1;
+		}
+		userInput = userInput - userInput%10;
+		userInput = userInput/10;
+	}
+
+	// if there is a duplicate, this it is found and printed
+	if(hasDuplicate){
+		for(var i = 0; i<10;i++){
+			if(counterArray[i] >1){
+				alert(i + " was repeated " + counterArray[i] + " times.");
+			}
+		}
 	}
 	else {
-		alert("The smallest number is: " +smallest +". It is repeated " + smallestCount + " times.");
-	}
-}
-	// asks if the user would like to run the program again, if no, the program ends.
-	userChoice= prompt("Would you like to run the program again? Please type yes/no:")
-	
-} while(userChoice != "no");
+			alert("No duplicate digits");
+			}
+	// asks the user if they want to test another number.
+	userChoice = prompt("Would you like to run the program again? yes/no");
 
-
-// function used to count the times the smallest value is found in the array.
-function repititionCount(array, smallest) {
-    for (var i = 0; i < array.length; i++) {
-        if (array[i] == smallest) {
-            counter++;
-        }
-    }
-    return counter;
-}
-
-
+} while (userChoice != "no");
